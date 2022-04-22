@@ -8,6 +8,8 @@ Copy `.env-example` to `.env`. Update `.env` with your Github PAT with repositor
 
 `docker-compose build`
 
+`docker-compose run --rm web bundle install`
+
 For setting a repo secret edit `set_repo_secret.rb` and fill in the `my_*` variables at the top of the file. Then run:
 ```
 docker-compose run --rm web bundle exec ruby set_repo_secret.rb
