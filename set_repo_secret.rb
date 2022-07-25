@@ -1,38 +1,24 @@
+#!env ruby
+
 require "rbnacl"
 require "base64"
 require "faraday"
 require "faraday/net_http"
+require "optparse"
 
-my_secret = ""
-my_secret_name = ""
-my_organization = "mlibrary"
-my_repo = ""
+$LOAD_PATH.unshift(File.dirname(File.realpath($0)) + "/lib")
 
-Faraday.default_adapter = :net_http
+require "repository_secret"
 
-conn = Faraday.new(
-  url: "https://api.github.com",
-  headers: {
-    "Accept" => "application/vnd.github.v3+json",
-    "Authorization" => "token #{ENV.fetch("GITHUB_PAT")}"
-  }
-) do |f|
-  f.request :json
-  f.response :json
+usage = "Usage: #{$0} [-e ENVIRONMENT] organization/repository SECRET_NAME secret_value"
+
+unless ARGV.length == 3
+  puts "Repository, secret name, and value are all required"
+  puts
+  puts usage
+  exit
 end
 
-response = conn.get("/repos/#{my_organization}/#{my_repo}/actions/secrets/public-key")
+(repository, secret_name, secret_value) = ARGV
 
-public_key_from_github = Base64.decode64(response.body["key"])
-public_key = RbNaCl::PublicKey.new(public_key_from_github)
-
-box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-encrypted_secret = box.encrypt(my_secret)
-
-secret_string = Base64.strict_encode64(encrypted_secret)
-
-body = {
-  encrypted_value: secret_string,
-  key_id: response.body["key_id"]
-}
-new_response = conn.put("/repos/#{my_organization}/#{my_repo}/actions/secrets/#{my_secret_name}", body)
+RepositorySecret.new(repository).add(secret_name, secret_value)
