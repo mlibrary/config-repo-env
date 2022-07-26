@@ -10,7 +10,7 @@ $LOAD_PATH.unshift(File.dirname(File.realpath($0)) + "/lib")
 
 require "repository_secret"
 
-usage = "Usage: #{$0} [-e ENVIRONMENT] organization/repository SECRET_NAME secret_value"
+usage = "Usage: #{$0} [-e ENVIRONMENT] organization/repository SECRET_NAME < secret_value"
 environment = nil
 
 OptionParser.new do |opts|
@@ -21,13 +21,14 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-unless ARGV.length == 3
-  puts "Repository, secret name, and value are all required"
+unless ARGV.length == 2
+  puts "Repository and secret name are both required."
   puts
   puts usage
   exit
 end
 
-(repository, secret_name, secret_value) = ARGV
+(repository, secret_name) = ARGV
+secret_value = $stdin.read
 
 RepositorySecret.new(repository, environment).add(secret_name, secret_value)

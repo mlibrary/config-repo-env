@@ -18,7 +18,7 @@ class RepositorySecret
     }
     response = conn.put("#{base_url}/secrets/#{secret_name}", body)
     raise "Response for putting secret failed with #{response.status}" unless response.success?
-    puts "Added #{secret_name} for #{repository}" + (environment ? "env #{environment}" : "")
+    puts "Added #{secret_name} for #{repository}" + (environment ? " env #{environment}" : "")
   end
 
   private
