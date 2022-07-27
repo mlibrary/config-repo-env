@@ -60,10 +60,10 @@ set_secret () {
 source $(dirname $(realpath $0))/.env
 export GITHUB_PAT
 
-kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath="{.data.token}" | base64 -d | set_secret KUBERNETES_TOKEN
+kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath="{.data.token}" | set_secret KUBERNETES_TOKEN
 
 # Could also get this from kubectl config
-kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath='{.data.ca\.crt}' | base64 -d | set_secret KUBERNETES_CA
+kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath='{.data.ca\.crt}' | set_secret KUBERNETES_CA
 
 echo $apiserver | set_secret KUBERNETES_SERVER
 echo $namespace | set_secret KUBERNETES_NAMESPACE
