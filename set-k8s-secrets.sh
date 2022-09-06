@@ -65,5 +65,5 @@ kubectl --context $context --namespace $namespace get secret $github_token_secre
 # Could also get this from kubectl config
 kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath='{.data.ca\.crt}' | set_secret KUBERNETES_CA
 
-echo $apiserver | set_secret KUBERNETES_SERVER
-echo $namespace | set_secret KUBERNETES_NAMESPACE
+echo -n $apiserver | set_secret KUBERNETES_SERVER
+echo -n $namespace | set_secret KUBERNETES_NAMESPACE
