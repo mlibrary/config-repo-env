@@ -1,2 +1,4 @@
 .env
-.bundle
+.bundle/cache
+Gemfile.lock
+vendor/
