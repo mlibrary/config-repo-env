@@ -7,9 +7,9 @@ environment=$3
 
 if [[ -z "$tk_path" || -z "$repository" || ! -d $tk_path ]];
 then cat <<EOT
-Usage: $0 /path/to/tanka/environment organization/repository [environment]
+Usage: $0 /path/to/tanka/environment organization/repository [github_environment]
 
-If github_env isn't given, it will set repository secrets rather than
+If github_environment isn't given, it will set repository secrets rather than
 environment secrets. If you need to set multiple sets of repository secrets,
 edit this script to change the name of the secrets it creates.
 EOT
