@@ -27,6 +27,7 @@ apiserver=$(tk_status_val APIServer)
 namespace=$(tk_status_val Namespace)
 github_token_secret=$(kubectl -n $namespace get -o jsonpath={.secrets[0].name} serviceaccount/github)
 
+# if $github_token_secret IS null
 if [[ -z "$github_token_secret" ]]; then
   echo "Can't find github service account secret in namespace $namespace";
   exit 1;
@@ -49,6 +50,7 @@ read
 # echo "CA cert"
 # echo "$ca_cert"
 
+# If $envirnoment IS NOT null
 if [[ ! -z "$environment" ]]; then
   environment="-e $environment"
 fi
@@ -59,6 +61,12 @@ set_secret () {
 
 source $(dirname $(realpath $0))/.env
 export GITHUB_PAT
+
+#if GITHUB_PAT env var is not set
+if [[ -z "${GITHUB_PAT}" ]]; then
+  echo "Can't find GITHUB_PAT environment variable. Set it in your .env file.";
+  exit 1;
+fi
 
 kubectl --context $context --namespace $namespace get secret $github_token_secret -o jsonpath="{.data.token}" | set_secret KUBERNETES_TOKEN
 
