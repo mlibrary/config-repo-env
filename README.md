@@ -16,6 +16,8 @@ Copy `.env-example` to `.env`.
 
 Update `.env` with your Github PAT with repository access. You need this to add/update Github secrets.
 
+Fine-grained tokens must have write access for repository administration as well as environments.
+
 Install the gems into `vendor/bundle`
 ```
 `bundle install` 
